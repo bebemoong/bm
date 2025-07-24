@@ -1,11 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome!</title>
+  <title>My Links</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #777;
+      margin-bottom: 40px;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    a.button-link {
+      display: block;
+      padding: 15px;
+      background-color: #007acc;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    a.button-link:hover {
+      background-color: #005fa3;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>안녕하세요! 내 GitHub 홈페이지입니다</h1>
-  <p>곧 멋진 내용이 들어올 예정입니다 :)</p>
+  <h1>📌 내 링크 모음</h1>
+  <p>자주 사용하는 서비스 바로가기</p>
+
+  <div class="link-list">
+    <a href="https://polished-natural-midge.ngrok-free.app/" target="_blank" class="button-link">🔗 BM</a>
+    <a href="https://docs.google.com/document/d/1L8dg_CyL0KCxnPnqwyA1L_7bRyCR52-DF5VJdhk8if4/edit?usp=sharing" target="_blank" class="button-link">📝 Google Doc</a>
+    <a href="https://www.figma.com/design/RGpCNVBC8R5Gpz90zYBaST/%EC%9D%B4%EB%9F%B0%EC%9D%BC%EC%9A%94%EC%9B%90?node-id=0-1&t=yTJhzMsUZGbjqzPu-1" target="_blank" class="button-link">🎨 Figma</a>
+    <a href="https://clarity.microsoft.com/projects" target="_blank" class="button-link">📊 Clarity</a>
+  </div>
 </body>
 </html>
