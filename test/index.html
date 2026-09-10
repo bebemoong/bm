@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 업무 시나리오 대시보드</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            overflow: hidden;
+        }
+
+        /* 왼쪽 사이드바 영역 */
+        .sidebar {
+            width: 400px;
+            background-color: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 16px;
+            background-color: #1e293b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* 오른쪽 아이프레임 영역 */
+        .content {
+            flex: 1;
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-header {
+            padding: 12px 16px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #475569;
+            font-weight: 500;
+        }
+        .content-header strong {
+            color: #2563eb;
+        }
+        iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background-color: #ffffff;
+        }
+
+        /* 아코디언 메뉴 스타일 */
+        .menu-group {
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            overflow: hidden;
+        }
+        .menu-header {
+            padding: 12px;
+            background-color: #f1f5f9;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .menu-header:hover {
+            background-color: #e2e8f0;
+        }
+        .menu-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .link-icon {
+            font-size: 12px;
+            color: #2563eb;
+        }
+        .menu-list {
+            display: none;
+            padding: 10px;
+        }
+        .menu-list.active {
+            display: block;
+        }
+
+        /* 시나리오 항목 스타일 */
+        .scenario-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px 8px;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        .scenario-item:hover {
+            background-color: #f8fafc;
+        }
+        .scenario-item:last-child {
+            border-bottom: none;
+        }
+        .scenario-info {
+            flex: 1;
+            cursor: pointer;
+            color: #334155;
+            padding-right: 10px;
+            line-height: 1.4;
+        }
+        .scenario-info:hover {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .scenario-id {
+            display: inline-block;
+            width: 45px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 버튼 스타일 */
+        .btn-group {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        button {
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            background: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: #475569;
+        }
+        button:hover {
+            background: #f1f5f9;
+        }
+        .btn-add {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #eff6ff;
+            color: #2563eb;
+            border: 1px dashed #93c5fd;
+            font-weight: bold;
+        }
+        .btn-add:hover {
+            background-color: #dbeafe;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <span>QA 업무 시나리오 관리</span>
+        </div>
+        <div class="menu-container" id="menu-container">
+            <!-- 자바스크립트로 메뉴가 렌더링 됩니다. -->
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="content-header" id="current-info">좌측 대메뉴를 클릭하면 화면이 연결됩니다.</div>
+        <iframe id="main-frame" src="about:blank" title="메인 콘텐츠 화면"></iframe>
+    </div>
+
+    <script>
+        // 대메뉴(group) 자체에 url을 부여했습니다.
+        let menuData = [
+            {
+                id: 1, title: "1. 대시보드", url: "https://vsoft.cyber.co.kr/admin/dashboards/main",
+                scenarios: [
+                    { sId: "DB-01", name: "관리자 로그인 후 운영 현황 확인" },
+                    { sId: "DB-02", name: "대시보드 연동 정보 확인" },
+                    { sId: "DB-03", name: "주문/배송/승인 등 대상 확인" },
+                    { sId: "DB-04", name: "주요 운영 이슈 확인 후 해당 메뉴 이동/처리" }
+                ]
+            },
+            {
+                id: 2, title: "2. 회원/계정관리", url: "https://vsoft.cyber.co.kr/admin/member/user/list",
+                scenarios: [
+                    { sId: "MM-01", name: "종류별 회원 등록" },
+                    { sId: "MM-02", name: "신규 회원 가입 확인 및 회원정보 조회" },
+                    { sId: "MM-03", name: "회원 검색 및 상세정보 확인" },
+                    { sId: "MM-04", name: "회원정보 수정" },
+                    { sId: "MM-05", name: "탈퇴회원 조회 및 관리" },
+                    { sId: "MM-06", name: "차단회원 등록 및 해제" },
+                    { sId: "MM-07", name: "강사 등록 및 관리" },
+                    { sId: "MM-08", name: "튜터 등록 및 관리" },
+                    { sId: "MM-09", name: "계정 등록 및 권한 설정" },
+                    { sId: "MM-10", name: "계정 및 권한별 접근 확인" }
+                ]
+            },
+            {
+                id: 3, title: "3. 상품/콘텐츠관리", url: "https://vsoft.cyber.co.kr/admin/product/list",
+                scenarios: [
+                    { sId: "PC-01", name: "분류 등록/수정/삭제" },
+                    { sId: "PC-02", name: "콘텐츠 등록" },
+                    { sId: "PC-03", name: "콘텐츠 수정 및 삭제" },
+                    { sId: "PC-04", name: "콘텐츠 수정 후 연결 과정, 강좌 확인" },
+                    { sId: "PC-05", name: "과정 등록" },
+                    { sId: "PC-06", name: "과정 수정 및 삭제" },
+                    { sId: "PC-07", name: "과정 수정 후 연결 콘텐츠,강좌 확인" },
+                    { sId: "PC-08", name: "강좌 등록" },
+                    { sId: "PC-09", name: "강좌 수정 및 삭제" },
+                    { sId: "PC-10", name: "강좌 수정 후 연결 콘텐츠,과정 확인" },
+                    { sId: "PC-11", name: "판매정보 설정" },
+                    { sId: "PC-12", name: "판매/전시 상태 변경" },
+                    { sId: "PC-13", name: "콘텐츠/과정/강좌 복사" },
+                    { sId: "PC-14", name: "도서 등록" },
+                    { sId: "PC-15", name: "도서와 상품 연결" }
+                ]
+            },
+            {
+                id: 4, title: "4. 수강/학습관리", url: "https://vsoft.cyber.co.kr/admin/course/student/list",
+                scenarios: [
+                    { sId: "LE-01", name: "수강회원 조회/관리" },
+                    { sId: "LE-02", name: "수강정보 조회" },
+                    { sId: "LE-03", name: "수강기간 변경" },
+                    { sId: "LE-04", name: "수강 연장 처리" },
+                    { sId: "LE-05", name: "수강 중지/종료 처리" },
+                    { sId: "LE-06", name: "회원에게 상품 수강 임의 등록" },
+                    { sId: "LE-07", name: "수강회원 조회/관리" },
+                    { sId: "LE-08", name: "수강정보 조회" },
+                    { sId: "LE-09", name: "수강기간 변경" },
+                    { sId: "LE-10", name: "수강 연장 처리" },
+                    { sId: "LE-11", name: "수강 중지/종료 처리" },
+                    { sId: "LE-12", name: "회원에게 상품 수강 임의 등록" },
+                    { sId: "LE-13", name: "회원별 학습현황 확인" },
+                    { sId: "LE-14", name: "차시별 진도율 확인" },
+                    { sId: "LE-15", name: "전체 진도율 확인" },
+                    { sId: "LE-16", name: "진도율/학습정보 변경 시 정상 반영 확인" },
+                    { sId: "LE-17", name: "설문 등록 및 하위 관리" },
+                    { sId: "LE-18", name: "학습평가 등록 및 하위 관리" },
+                    { sId: "LE-19", name: "수료 조건 확인" },
+                    { sId: "LE-20", name: "수료 처리" },
+                    { sId: "LE-21", name: "수료증 발급 및 조회" },
+                    { sId: "LE-22", name: "수강후기 조회" },
+                    { sId: "LE-23", name: "수강후기 수정 및 관리" },
+                    { sId: "LE-24", name: "강좌문의 조회" },
+                    { sId: "LE-25", name: "강좌문의 수정 및 관리" }
+                ]
+            },
+            {
+                id: 5, title: "5. 주문/결제관리", url: "https://vsoft.cyber.co.kr/admin/payment/manage/list",
+                scenarios: [
+                    { sId: "OD-01", name: "신규 주문 확인" },
+                    { sId: "OD-02", name: "주문 상세정보 확인" },
+                    { sId: "OD-03", name: "결제 상태 확인" },
+                    { sId: "OD-04", name: "결제 취소" },
+                    { sId: "OD-05", name: "전체 환불" },
+                    { sId: "OD-06", name: "부분 환불" },
+                    { sId: "OD-07", name: "환불 후 주문 상태 확인" },
+                    { sId: "OD-08", name: "환불 후 수강 상태 확인" },
+                    { sId: "OD-09", name: "교재 주문 확인" },
+                    { sId: "OD-10", name: "배송 조회" },
+                    { sId: "OD-11", name: "교재 배송 처리" },
+                    { sId: "OD-12", name: "배송 상태 변경" },
+                    { sId: "OD-13", name: "주문/배송 정보 조회" }
+                ]
+            },
+            {
+                id: 6, title: "6. 정산/수수료관리", url: "https://vsoft.cyber.co.kr/admin/statistics/settlement-target-sales",
+                scenarios: [
+                    { sId: "CA-01", name: "강사 수수료 정산 대상 조회" },
+                    { sId: "CA-02", name: "강사별 수수료 계산" },
+                    { sId: "CA-03", name: "튜터 수수료 정산" },
+                    { sId: "CA-04", name: "지급 내역 조회" },
+                    { sId: "CA-05", name: "정산 리포트 조회" }
+                ]
+            },
+            {
+                id: 7, title: "7. 마케팅/프로모션", url: "https://vsoft.cyber.co.kr/admin/cart/member/list",
+                scenarios: [
+                    { sId: "MP-01", name: "쿠폰 생성" },
+                    { sId: "MP-02", name: "쿠폰 발급" },
+                    { sId: "MP-03", name: "쿠폰 사용 및 할인 적용 확인" },
+                    { sId: "MP-04", name: "쿠폰 사용 제한 조건 확인" },
+                    { sId: "MP-05", name: "포인트 적립" },
+                    { sId: "MP-06", name: "포인트 사용" },
+                    { sId: "MP-07", name: "이벤트 생성" },
+                    { sId: "MP-08", name: "이벤트 당첨자 관리" },
+                    { sId: "MP-09", name: "잠재고객 조회 및 관리" },
+                    { sId: "MP-10", name: "SMS 발송" },
+                    { sId: "MP-11", name: "이메일 발송" },
+                    { sId: "MP-12", name: "알림톡 발송" },
+                    { sId: "MP-13", name: "발송 결과 확인" }
+                ]
+            },
+            {
+                id: 8, title: "8. 고객사(B2B/기업) 관리", url: "https://vsoft.cyber.co.kr/admin/system/company",
+                scenarios: [
+                    { sId: "BB-01", name: "고객사 등록" },
+                    { sId: "BB-02", name: "고객사 수정 및 삭제" },
+                    { sId: "BB-03", name: "고객사 관리자 등록" },
+                    { sId: "BB-04", name: "고객사 관리자 수정 및 해제" },
+                    { sId: "BB-05", name: "고객사 관리자 권한 체크" },
+                    { sId: "BB-06", name: "고객사 페이지 생성" },
+                    { sId: "BB-07", name: "고객사 페이지 메뉴별 총 관리 사용 테스트" },
+                    { sId: "BB-08", name: "고객사 페이지 연동 상품 체크" },
+                    { sId: "BB-09", name: "고객사 관리 리포트" },
+                    { sId: "BB-10", name: "코드 관리" }
+                ]
+            },
+            {
+                id: 9, title: "9. 사이트운영", url: "https://vsoft.cyber.co.kr/admin/site/main",
+                scenarios: [
+                    { sId: "SO-01", name: "페이지 관리" },
+                    { sId: "SO-02", name: "배너 등록" },
+                    { sId: "SO-03", name: "배너 노출 위치/기간 설정" },
+                    { sId: "SO-04", name: "팝업 등록 및 노출 확인" },
+                    { sId: "SO-05", name: "검색창 관리" },
+                    { sId: "SO-06", name: "신청/문의 조회/확인/답변 관리" },
+                    { sId: "SO-07", name: "게시판별 입력/수정/삭제" },
+                    { sId: "SO-08", name: "약관/개인정보처리방침 수정" },
+                    { sId: "SO-09", name: "관리자 수정 후 프론트 노출 확인" }
+                ]
+            },
+            {
+                id: 10, title: "10. 통계/데이터 리포트", url: "https://vsoft.cyber.co.kr/admin/statistics/today-sales",
+                scenarios: [
+                    { sId: "ST-01", name: "기간별 매출 조회" },
+                    { sId: "ST-02", name: "강좌별/과정별/과목별 매출 조회" },
+                    { sId: "ST-03", name: "주문 데이터와 매출 통계 비교" },
+                    { sId: "ST-04", name: "회원 가입 통계 조회" },
+                    { sId: "ST-05", name: "접속/트래픽 통계 조회" },
+                    { sId: "ST-06", name: "학습현황 통계 조회" },
+                    { sId: "ST-07", name: "수료율 조회" },
+                    { sId: "ST-08", name: "강사/튜터 통계 조회" },
+                    { sId: "ST-09", name: "기관별 통계 조회" },
+                    { sId: "ST-10", name: "리포트 다운로드" },
+                    { sId: "ST-11", name: "통계 기간/필터 변경 후 데이터 검증" }
+                ]
+            },
+            {
+                id: 11, title: "11. 시스템/환경설정", url: "https://vsoft.cyber.co.kr/admin/site/basic",
+                scenarios: [
+                    { sId: "SS-01", name: "메뉴 관리" },
+                    { sId: "SS-02", name: "코드 관리" },
+                    { sId: "SS-03", name: "색인 관리" },
+                    { sId: "SS-04", name: "택배 설정" },
+                    { sId: "SS-05", name: "로그 조회" },
+                    { sId: "SS-06", name: "설정 변경 후 시스템 반영 확인" }
+                ]
+            }
+        ];
+
+        const container = document.getElementById('menu-container');
+        const mainFrame = document.getElementById('main-frame');
+        const currentInfo = document.getElementById('current-info');
+
+        function renderMenu() {
+            container.innerHTML = ''; 
+
+            menuData.forEach((group, groupIndex) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'menu-group';
+
+                // 대메뉴 헤더 영역
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'menu-header';
+                headerDiv.innerHTML = `
+                    <div class="menu-title">
+                        <span>${group.title}</span> <span class="link-icon">🔗</span>
+                    </div>
+                    <span>▼</span>
+                `;
+                
+                const listDiv = document.createElement('div');
+                listDiv.className = 'menu-list';
+                
+                // 첫 화면 접속 시 1번 그룹 열기 + 화면 연결
+                if(groupIndex === 0) {
+                    listDiv.classList.add('active');
+                    mainFrame.src = group.url;
+                    currentInfo.innerHTML = `<strong>${group.title}</strong> 메인 화면 연동 중...`;
+                }
+
+                // 대메뉴 클릭 이벤트 (아코디언 토글 + iframe URL 변경)
+                headerDiv.onclick = () => {
+                    // 아코디언 열고 닫기
+                    listDiv.classList.toggle('active');
+                    const icon = headerDiv.querySelector('span:last-child');
+                    icon.textContent = listDiv.classList.contains('active') ? '▲' : '▼';
+
+                    // 우측 iframe URL 연결
+                    if(group.url) {
+                        mainFrame.src = group.url;
+                        currentInfo.innerHTML = `<strong>${group.title}</strong> 메인 화면 연동 중...`;
+                    }
+                };
+
+                // 하위 시나리오 리스트 렌더링
+                group.scenarios.forEach((scenario, scenarioIndex) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'scenario-item';
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'scenario-info';
+                    infoDiv.innerHTML = `<span class="scenario-id">${scenario.sId}</span> ${scenario.name}`;
+                    
+                    // 하위 시나리오 클릭 시 화면 이동 없이 상단 텍스트만 변경 (어떤 QA 진행 중인지 표시용)
+                    infoDiv.onclick = () => {
+                        currentInfo.innerHTML = `<strong>${group.title}</strong> > 현재 테스트 항목 : [${scenario.sId}] ${scenario.name}`;
+                    };
+
+                    const btnGroup = document.createElement('div');
+                    btnGroup.className = 'btn-group';
+
+                    const editBtn = document.createElement('button');
+                    editBtn.textContent = '수정';
+                    editBtn.onclick = (e) => {
+                        e.stopPropagation(); // 부모 클릭 방지
+                        const newId = prompt('시나리오 ID를 입력하세요:', scenario.sId);
+                        const newName = prompt('업무 시나리오 내용을 입력하세요:', scenario.name);
+                        
+                        if(newId && newName !== null) {
+                            menuData[groupIndex].scenarios[scenarioIndex] = { 
+                                sId: newId, 
+                                name: newName
+                            };
+                            renderMenu();
+                            
+                            // 수정 후 해당 아코디언 열림 상태 유지
+                            const currentListDiv = container.querySelectorAll('.menu-list')[groupIndex];
+                            currentListDiv.classList.add('active');
+                            container.querySelectorAll('.menu-header span:last-child')[groupIndex].textContent = '▲';
+                        }
+                    };
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = '삭제';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        if(confirm(`[${scenario.name}] 항목을 삭제하시겠습니까?`)) {
+                            menuData[groupIndex].scenarios.splice(scenarioIndex, 1);
+                            renderMenu();
+                            
+                            const currentListDiv = container.querySelectorAll('.menu-list')[groupIndex];
+                            currentListDiv.classList.add('active');
+                            container.querySelectorAll('.menu-header span:last-child')[groupIndex].textContent = '▲';
+                        }
+                    };
+
+                    btnGroup.appendChild(editBtn);
+                    btnGroup.appendChild(deleteBtn);
+
+                    itemDiv.appendChild(infoDiv);
+                    itemDiv.appendChild(btnGroup);
+                    listDiv.appendChild(itemDiv);
+                });
+
+                // 항목 추가 버튼
+                const addBtn = document.createElement('button');
+                addBtn.className = 'btn-add';
+                addBtn.textContent = '+ 새 시나리오 추가';
+                addBtn.onclick = () => {
+                    const addId = prompt('새로운 시나리오 ID를 입력하세요 (예: DB-99):');
+                    if(!addId) return;
+                    const addName = prompt('업무 시나리오 내용을 입력하세요:');
+                    if(!addName) return;
+
+                    menuData[groupIndex].scenarios.push({
+                        sId: addId,
+                        name: addName
+                    });
+                    renderMenu();
+                    
+                    const currentListDiv = container.querySelectorAll('.menu-list')[groupIndex];
+                    currentListDiv.classList.add('active');
+                    container.querySelectorAll('.menu-header span:last-child')[groupIndex].textContent = '▲';
+                };
+                listDiv.appendChild(addBtn);
+
+                groupDiv.appendChild(headerDiv);
+                groupDiv.appendChild(listDiv);
+                container.appendChild(groupDiv);
+            });
+        }
+
+        renderMenu();
+    </script>
+</body>
+</html>
