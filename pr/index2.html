@@ -10,10 +10,6 @@
     html, body { height:100%; margin:0; font-family:Arial,"Malgun Gothic",sans-serif; color:#182230; }
     body { background:var(--bg); }
     .app { height:100vh; min-height:420px; display:flex; flex-direction:column; }
-    header { height:58px; flex-shrink:0; display:flex; align-items:center; gap:12px; padding:0 18px; background:#fff; border-bottom:1px solid var(--line); }
-    .logo { width:30px; height:30px; display:grid; place-items:center; border-radius:8px; background:#e8efff; color:var(--blue); font-weight:800; }
-    header h1 { margin:0; font-size:16px; font-weight:700; }
-    .header-note { color:var(--muted); font-size:12px; margin-left:auto; }
     main { flex:1; min-height:0; display:grid; grid-template-columns:320px minmax(0,1fr); }
     aside { min-height:0; display:flex; flex-direction:column; background:#fff; border-right:1px solid var(--line); }
     .side-head { padding:16px 14px 12px; border-bottom:1px solid var(--line); }
@@ -49,8 +45,6 @@
     .error { padding:16px; margin:10px; border-radius:8px; background:#fff1f0; color:#a22b22; font-size:13px; line-height:1.6; }
     @media (max-width:760px) {
       main { grid-template-columns: minmax(150px, 38%) minmax(0,1fr); }
-      header { padding:0 12px; }
-      .header-note { display:none; }
       .viewer-head { padding:9px 10px; gap:7px; }
       .open-btn { padding:7px 8px; }
     }
@@ -58,11 +52,6 @@
 </head>
 <body>
 <div class="app">
-  <header>
-    <div class="logo">P</div>
-    <h1>강좌 홍보 페이지 뷰어</h1>
-    <div class="header-note">Google Sheets 연동 · 좌측 강좌 선택</div>
-  </header>
   <main>
     <aside>
       <div class="side-head">
@@ -95,7 +84,6 @@
         </div>
         <iframe id="pageFrame" title="강좌 홍보 페이지" style="display:none" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
-      <div id="notice" class="notice">페이지가 표시되지 않으면 해당 사이트가 iframe 삽입을 차단했을 수 있습니다. ‘새 창에서 열기’를 이용해 주세요.</div>
     </section>
   </main>
 </div>
