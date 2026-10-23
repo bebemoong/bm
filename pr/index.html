@@ -1029,13 +1029,16 @@
 
         function initCategories() {
 
-            const categories = [...new Set(
-                courses
-                    .map(course => course.category)
-                    .filter(Boolean)
-            )].sort((a, b) =>
-                a.localeCompare(b, 'ko')
-            );
+            
+const categories = [...new Set(
+    courses
+        .map(course => course.category)
+        .filter(Boolean)
+        .map(category => String(category))
+)].sort((a, b) =>
+    a.localeCompare(b, 'ko')
+);
+
 
             /* 모바일 드롭다운 */
 
