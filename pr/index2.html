@@ -1,0 +1,244 @@
+from pathlib import Path
+
+html = r'''<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>강좌 홍보 페이지 뷰어</title>
+  <style>
+    :root { color-scheme: light; --line:#e2e5e9; --muted:#687385; --blue:#2563eb; --bg:#f5f7fa; }
+    * { box-sizing: border-box; }
+    html, body { height:100%; margin:0; font-family:Arial,"Malgun Gothic",sans-serif; color:#182230; }
+    body { background:var(--bg); }
+    .app { height:100vh; min-height:420px; display:flex; flex-direction:column; }
+    header { height:58px; flex-shrink:0; display:flex; align-items:center; gap:12px; padding:0 18px; background:#fff; border-bottom:1px solid var(--line); }
+    .logo { width:30px; height:30px; display:grid; place-items:center; border-radius:8px; background:#e8efff; color:var(--blue); font-weight:800; }
+    header h1 { margin:0; font-size:16px; font-weight:700; }
+    .header-note { color:var(--muted); font-size:12px; margin-left:auto; }
+    main { flex:1; min-height:0; display:grid; grid-template-columns:320px minmax(0,1fr); }
+    aside { min-height:0; display:flex; flex-direction:column; background:#fff; border-right:1px solid var(--line); }
+    .side-head { padding:16px 14px 12px; border-bottom:1px solid var(--line); }
+    .side-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-size:14px; font-weight:700; }
+    #count { font-size:12px; color:var(--muted); font-weight:400; }
+    .search-wrap { position:relative; }
+    #search { width:100%; height:38px; padding:0 12px 0 34px; border:1px solid #d8dde5; border-radius:8px; font-size:13px; outline:none; }
+    #search:focus { border-color:#7aa2ff; box-shadow:0 0 0 3px #2563eb18; }
+    .search-icon { position:absolute; left:11px; top:10px; color:#8993a3; font-size:15px; }
+    #list { flex:1; overflow:auto; padding:7px; }
+    .item { width:100%; display:block; text-align:left; padding:11px 10px; margin:2px 0; border:0; border-radius:7px; background:transparent; cursor:pointer; color:#283344; font-size:13px; line-height:1.45; }
+    .item:hover { background:#f4f6fa; }
+    .item.active { background:#eaf1ff; color:#1749b8; font-weight:700; }
+    .item .path { display:block; margin-top:4px; color:#7a8595; font-size:11px; font-weight:400; overflow-wrap:anywhere; }
+    .item.active .path { color:#5274bd; }
+    .side-foot { border-top:1px solid var(--line); padding:10px 13px; color:var(--muted); font-size:11px; line-height:1.5; }
+    .viewer { min-width:0; min-height:0; display:flex; flex-direction:column; background:#edf0f4; }
+    .viewer-head { min-height:58px; display:flex; align-items:center; gap:12px; padding:10px 16px; background:#fff; border-bottom:1px solid var(--line); }
+    .current { flex:1; min-width:0; }
+    #currentTitle { font-size:14px; font-weight:700; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    #currentUrl { margin-top:4px; color:var(--muted); font-size:11px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .open-btn { flex-shrink:0; border:1px solid #d7dce4; background:#fff; border-radius:7px; padding:8px 10px; font-size:12px; cursor:pointer; color:#283344; text-decoration:none; }
+    .open-btn:hover { background:#f7f8fa; }
+    .frame-wrap { position:relative; flex:1; min-height:0; }
+    #pageFrame { width:100%; height:100%; border:0; background:#fff; }
+    .empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px; color:var(--muted); }
+    .empty-inner { max-width:420px; }
+    .empty .symbol { font-size:35px; margin-bottom:12px; }
+    .empty strong { display:block; color:#354052; font-size:15px; margin-bottom:8px; }
+    .empty p { font-size:13px; line-height:1.65; margin:0; }
+    .notice { display:none; background:#fff8e7; border-top:1px solid #f2dfa8; padding:9px 14px; color:#7b5a11; font-size:12px; line-height:1.5; }
+    .notice.show { display:block; }
+    .error { padding:16px; margin:10px; border-radius:8px; background:#fff1f0; color:#a22b22; font-size:13px; line-height:1.6; }
+    @media (max-width:760px) {
+      main { grid-template-columns: minmax(150px, 38%) minmax(0,1fr); }
+      header { padding:0 12px; }
+      .header-note { display:none; }
+      .viewer-head { padding:9px 10px; gap:7px; }
+      .open-btn { padding:7px 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">P</div>
+    <h1>강좌 홍보 페이지 뷰어</h1>
+    <div class="header-note">Google Sheets 연동 · 좌측 강좌 선택</div>
+  </header>
+  <main>
+    <aside>
+      <div class="side-head">
+        <div class="side-title"><span>강좌 목록</span><span id="count">불러오는 중…</span></div>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="search" type="search" placeholder="강좌명 검색…" autocomplete="off">
+        </div>
+      </div>
+      <div id="list" aria-live="polite">
+        <div class="empty"><div class="empty-inner"><strong>시트 연결 확인 중</strong><p>Google Sheets에서 강좌 목록을 불러오고 있어요.</p></div></div>
+      </div>
+      <div class="side-foot">목록은 시트의 <b>title</b>, <b>url</b> 열만 사용합니다.<br>URL 앞에 베이스 주소를 자동으로 붙입니다.</div>
+    </aside>
+    <section class="viewer">
+      <div class="viewer-head">
+        <div class="current">
+          <div id="currentTitle">강좌를 선택하세요</div>
+          <div id="currentUrl">선택한 페이지 주소가 여기에 표시됩니다.</div>
+        </div>
+        <a id="openLink" class="open-btn" href="#" target="_blank" rel="noopener" style="display:none">새 창에서 열기 ↗</a>
+      </div>
+      <div class="frame-wrap">
+        <div id="placeholder" class="empty">
+          <div class="empty-inner">
+            <div class="symbol">▣</div>
+            <strong>홍보 페이지 미리보기</strong>
+            <p>왼쪽 목록에서 강좌를 선택하면<br>이 영역에 해당 페이지가 표시됩니다.</p>
+          </div>
+        </div>
+        <iframe id="pageFrame" title="강좌 홍보 페이지" style="display:none" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div id="notice" class="notice">페이지가 표시되지 않으면 해당 사이트가 iframe 삽입을 차단했을 수 있습니다. ‘새 창에서 열기’를 이용해 주세요.</div>
+    </section>
+  </main>
+</div>
+<script>
+  // Google Sheets 설정
+  const SHEET_ID = "1fcwsqTkb8zcJYac0od7KeOuwPh4lLqW_eUK3r0R58_A";
+  const SHEET_GID = "0";
+  const BASE_URL = "https://bm.cyber.co.kr/";
+  const listEl = document.getElementById("list");
+  const countEl = document.getElementById("count");
+  const searchEl = document.getElementById("search");
+  const frame = document.getElementById("pageFrame");
+  const placeholder = document.getElementById("placeholder");
+  const notice = document.getElementById("notice");
+  const openLink = document.getElementById("openLink");
+  const currentTitle = document.getElementById("currentTitle");
+  const currentUrl = document.getElementById("currentUrl");
+  let courses = [];
+  let selectedUrl = "";
+
+  function makeAbsoluteUrl(path) {
+    const value = String(path || "").trim();
+    if (!value) return "";
+    if (/^https?:\/\//i.test(value)) return value;
+    return BASE_URL.replace(/\/+$/, "") + "/" + value.replace(/^\/+/, "");
+  }
+
+  function showError(message) {
+    countEl.textContent = "연결 필요";
+    listEl.innerHTML = "";
+    const box = document.createElement("div");
+    box.className = "error";
+    box.textContent = message;
+    listEl.appendChild(box);
+  }
+
+  function parseGviz(text) {
+    // Google Visualization API returns: google.visualization.Query.setResponse({...});
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start < 0 || end < start) throw new Error("시트 응답을 읽을 수 없습니다.");
+    const data = JSON.parse(text.slice(start, end + 1));
+    if (data.status === "error") {
+      throw new Error((data.errors || []).map(e => e.detailed_message || e.message).join(" "));
+    }
+    const cols = (data.table && data.table.cols) || [];
+    const rows = (data.table && data.table.rows) || [];
+    const titles = cols.map(c => String(c.label || c.id || "").trim().toLowerCase());
+    const titleIndex = titles.indexOf("title");
+    const urlIndex = titles.indexOf("url");
+    if (titleIndex < 0 || urlIndex < 0) {
+      throw new Error("시트에서 title 및 url 열을 찾지 못했습니다. 첫 행의 열 이름을 확인해 주세요.");
+    }
+    return rows.map(row => {
+      const cells = row.c || [];
+      const title = cells[titleIndex] && (cells[titleIndex].f || cells[titleIndex].v);
+      const path = cells[urlIndex] && (cells[urlIndex].f || cells[urlIndex].v);
+      return { title: String(title || "").trim(), url: makeAbsoluteUrl(path) };
+    }).filter(item => item.title && item.url);
+  }
+
+  function renderList() {
+    const keyword = searchEl.value.trim().toLocaleLowerCase();
+    const filtered = courses.filter(c => c.title.toLocaleLowerCase().includes(keyword));
+    countEl.textContent = `${filtered.length}개`;
+    listEl.innerHTML = "";
+    if (!filtered.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.innerHTML = '<div class="empty-inner"><strong>검색 결과가 없습니다</strong><p>다른 검색어를 입력해 주세요.</p></div>';
+      listEl.appendChild(empty);
+      return;
+    }
+    filtered.forEach(course => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "item" + (course.url === selectedUrl ? " active" : "");
+      const title = document.createElement("span");
+      title.textContent = course.title;
+      const path = document.createElement("span");
+      path.className = "path";
+      path.textContent = course.url.replace(/^https:\/\/bm\.cyber\.co\.kr\//, "");
+      button.append(title, path);
+      button.addEventListener("click", () => selectCourse(course));
+      listEl.appendChild(button);
+    });
+  }
+
+  function selectCourse(course) {
+    selectedUrl = course.url;
+    currentTitle.textContent = course.title;
+    currentUrl.textContent = course.url;
+    openLink.href = course.url;
+    openLink.style.display = "inline-block";
+    placeholder.style.display = "none";
+    frame.style.display = "block";
+    notice.classList.add("show");
+    // Reassigning src makes the right-hand preview navigate immediately.
+    frame.src = course.url;
+    renderList();
+  }
+
+  async function loadCourses() {
+  const endpoint =
+    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&tqx=out:json`;
+
+  try {
+    const response = await fetch(endpoint, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`시트 응답 오류: ${response.status}`);
+    }
+
+    const text = await response.text();
+    courses = parseGviz(text);
+
+    if (!courses.length) {
+      showError("시트에 표시할 title과 url 데이터가 없습니다.");
+      return;
+    }
+
+    renderList();
+    selectCourse(courses[0]);
+
+  } catch (error) {
+    showError(
+      "시트 목록을 불러오지 못했습니다.\n\n" +
+      "1. 시트 공유 권한을 확인해 주세요.\n" +
+      "2. 파일을 직접 열지 말고 로컬 서버로 실행해 주세요.\n\n" +
+      "오류: " + error.message
+    );
+    console.error(error);
+  }
+}
+
+  searchEl.addEventListener("input", renderList);
+  loadCourses();
+</script>
+</body>
+</html>
+'''
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created: {path} ({path.stat().st_size:,} bytes)")
