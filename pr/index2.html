@@ -204,7 +204,7 @@
   }
 
   async function loadCourses() {
-    const endpoint = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&tqx=out:json`;
+    const endpoint = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&range=A2:G&tqx=out:json`;
     try {
       const response = await fetch(endpoint, { cache: "no-store" });
       if (!response.ok) throw new Error(`Google Sheets 응답 오류 (${response.status})`);
