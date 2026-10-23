@@ -1238,16 +1238,19 @@ const categories = [...new Set(
 
                 /* 검색 대상 */
 
-                const title =
-                    (course.title || '').toLowerCase();
+                
+const title =
+    String(course.title || '').toLowerCase();
 
-                const description =
-                    (course.description || '').toLowerCase();
+const description =
+    String(course.description || '').toLowerCase();
 
-                const tags =
-                    (course.tags || [])
-                        .join(' ')
-                        .toLowerCase();
+const tags =
+    (Array.isArray(course.tags) ? course.tags : [])
+        .map(tag => String(tag))
+        .join(' ')
+        .toLowerCase();
+
 
                 const fullText =
                     `${title} ${description} ${tags}`;
