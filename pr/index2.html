@@ -524,10 +524,7 @@
 openLink.href = course.url;
 openLink.style.display = "inline-block";
 
-openLink2.href = course.url.replace(
-  "https://bm2.cyber.co.kr/",
-  "https://bm.cyber.co.kr/"
-);
+openLink2.href = BASE_URL2 + course.url.replace(BASE_URL, "");
 openLink2.style.display = "inline-block";
 
 
