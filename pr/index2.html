@@ -319,7 +319,15 @@
             target="_blank"
             rel="noopener"
             style="display: none"
-          >새 창에서 열기 ↗</a>
+          >새 창에서 열기(bm2) ↗</a>
+          <a
+  id="openLink2"
+  class="open-btn"
+  href="#"
+  target="_blank"
+  rel="noopener"
+  style="display: none"
+>새 창에서 열기(bm) ↗</a>
         </div>
 
         <div class="frame-wrap">
@@ -350,6 +358,7 @@
     const SHEET_ID = "1fcwsqTkb8zcJYac0od7KeOuwPh4lLqW_eUK3r0R58_A";
     const SHEET_GID = "0";
     const BASE_URL = "https://bm2.cyber.co.kr/";
+    const BASE_URL2 = "https://bm.cyber.co.kr/";
 
     const listEl = document.getElementById("list");
     const countEl = document.getElementById("count");
@@ -357,6 +366,7 @@
     const frame = document.getElementById("pageFrame");
     const placeholder = document.getElementById("placeholder");
     const openLink = document.getElementById("openLink");
+    const openLink2 = document.getElementById("openLink2");
     const currentTitle = document.getElementById("currentTitle");
     const currentUrl = document.getElementById("currentUrl");
 
@@ -510,8 +520,16 @@
       currentTitle.textContent = course.title;
       currentUrl.textContent = course.url;
 
-      openLink.href = course.url;
-      openLink.style.display = "inline-block";
+      
+openLink.href = course.url;
+openLink.style.display = "inline-block";
+
+openLink2.href = course.url.replace(
+  "https://bm2.cyber.co.kr/",
+  "https://bm.cyber.co.kr/"
+);
+openLink2.style.display = "inline-block";
+
 
       placeholder.style.display = "none";
       frame.style.display = "block";
