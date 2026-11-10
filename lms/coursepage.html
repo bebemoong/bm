@@ -168,7 +168,6 @@
       word-break: keep-all
     }
 
-    /* 공통 배치: 모바일에서는 자연스럽게 줄바꿈됩니다. */
     .course-tags {
       display: flex;
       flex-wrap: wrap;
@@ -176,7 +175,6 @@
       gap: 8px;
     }
 
-    /* 공통 형태 */
     .course-tag {
       display: inline-flex;
       align-items: center;
@@ -194,7 +192,6 @@
       line-height: 1.4;
       white-space: nowrap;
 
-      /* 종류 클래스가 없는 경우의 기본값입니다. */
       --tag-bg: #f3f4f6;
       --tag-color: #4b5563;
       --tag-border: #e5e7eb;
@@ -234,14 +231,14 @@
         box-shadow 150ms ease;
     }
 
-        @media (hover: hover) {
+    @media (hover: hover) {
       .course-tags .course-tag:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-        .course-tags .course-tag:active {
+    .course-tags .course-tag:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -307,14 +304,14 @@
         box-shadow 150ms ease;
     }
 
-        @media (hover: hover) {
+    @media (hover: hover) {
       .hero-actions .btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-        .hero-actions .btn:active {
+    .hero-actions .btn:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -831,14 +828,14 @@
         box-shadow 150ms ease;
     }
 
-        @media (hover: hover) {
+    @media (hover: hover) {
       .btn.primary:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-        .btn.primary:active {
+    .btn.primary:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -852,7 +849,6 @@
         box-shadow 150ms ease;
     }
 
-    /* 마우스를 사용할 수 있는 기기에서만 적용합니다. */
     @media (hover: hover) {
       .btn:hover {
         transform: translateY(-1px);
@@ -860,7 +856,7 @@
       }
     }
 
-    /* 클릭하는 순간의 효과입니다. */
+
     .btn:active {
       transform: translateY(0) scale(0.97);
     }
@@ -1192,7 +1188,7 @@
       }
     }
 
-        .wrap {
+    .wrap {
       width: min(1280px, calc(100% - 48px))
     }
 
@@ -1524,7 +1520,7 @@
       }
     }
 
-        .hero-extra {
+    .hero-extra {
       padding-top: 22px
     }
 
@@ -1838,7 +1834,7 @@
       }
     }
 
-    /* v3: duration variants, included materials and coupon offer */
+
     .duration-select {
       max-width: 100%;
       padding: 8px 28px 8px 10px;
@@ -2010,7 +2006,7 @@
     }
 
 
-        .course-title-row {
+    .course-title-row {
       display: flex;
       align-items: flex-start;
       gap: 16px;
@@ -2158,7 +2154,7 @@
       }
     }
 
-        .duration-label {
+    .duration-label {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -2482,7 +2478,6 @@
       <section aria-label="강좌소개 PR" class="pr-overview" id="prOverview">
         <div class="pr-slot" id="prContent">
           <style>
-            /* PR 영역 내부에만 적용됩니다. */
             #prContent .safety-pr {
               --pr-primary: #6307f8;
               width: 100%;
@@ -2511,7 +2506,7 @@
               padding: 0 32px;
             }
 
-              #prContent .safety-pr__hero {
+            #prContent .safety-pr__hero {
               padding: 88px 0;
               background: #f5f1ff;
               text-align: center;
@@ -2625,6 +2620,7 @@
               background: var(--pr-primary);
               content: "";
             }
+
             #prContent .safety-pr__closing {
               padding: 90px 0;
               background: #21143c;
@@ -2712,7 +2708,7 @@
           </style>
 
           <div class="safety-pr">
-            <!-- 핵심 메시지 -->
+
             <section class="safety-pr__hero" aria-labelledby="safety-pr-title">
               <div class="safety-pr__inner">
                 <span class="safety-pr__eyebrow">중대재해처벌법 × 산업안전보건법</span>
@@ -2729,7 +2725,7 @@
               </div>
             </section>
 
-            <!-- 강좌 구성 -->
+
             <section class="safety-pr__section" aria-labelledby="safety-pr-learning">
               <div class="safety-pr__inner">
                 <div class="safety-pr__heading">
@@ -2777,7 +2773,7 @@
               </div>
             </section>
 
-            <!-- 학습 대상 -->
+
             <section class="safety-pr__closing" aria-labelledby="safety-pr-audience">
               <div class="safety-pr__inner safety-pr__closing-layout">
                 <div>
