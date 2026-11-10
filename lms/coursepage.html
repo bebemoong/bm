@@ -234,16 +234,14 @@
         box-shadow 150ms ease;
     }
 
-    /* 마우스를 사용할 수 있는 기기에서만 적용합니다. */
-    @media (hover: hover) {
+        @media (hover: hover) {
       .course-tags .course-tag:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-    /* 클릭하는 순간의 효과입니다. */
-    .course-tags .course-tag:active {
+        .course-tags .course-tag:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -309,16 +307,14 @@
         box-shadow 150ms ease;
     }
 
-    /* 마우스를 사용할 수 있는 기기에서만 적용합니다. */
-    @media (hover: hover) {
+        @media (hover: hover) {
       .hero-actions .btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-    /* 클릭하는 순간의 효과입니다. */
-    .hero-actions .btn:active {
+        .hero-actions .btn:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -835,16 +831,14 @@
         box-shadow 150ms ease;
     }
 
-    /* 마우스를 사용할 수 있는 기기에서만 적용합니다. */
-    @media (hover: hover) {
+        @media (hover: hover) {
       .btn.primary:hover {
         transform: translateY(-1px);
         box-shadow: 0 0 0 1px var(--tag-border);
       }
     }
 
-    /* 클릭하는 순간의 효과입니다. */
-    .btn.primary:active {
+        .btn.primary:active {
       transform: translateY(0) scale(0.97);
     }
 
@@ -1198,8 +1192,7 @@
       }
     }
 
-    /* 공통 페이지 기준: A 시안 외형 + 최대 1280px. PR 영역만 컨테이너 밖입니다. */
-    .wrap {
+        .wrap {
       width: min(1280px, calc(100% - 48px))
     }
 
@@ -1531,8 +1524,7 @@
       }
     }
 
-    /* 수정본: PR 유무와 관계없이 공통 구매 동작 및 다중 항목 레이아웃을 사용합니다. */
-    .hero-extra {
+        .hero-extra {
       padding-top: 22px
     }
 
@@ -2018,8 +2010,7 @@
     }
 
 
-    /* Title actions and compact purchase summary */
-    .course-title-row {
+        .course-title-row {
       display: flex;
       align-items: flex-start;
       gap: 16px;
@@ -2167,8 +2158,7 @@
       }
     }
 
-    /* v5: 포함 교재 상세 / 기간 안내 위치 / 차시 정렬 및 미리보기만 수정합니다. */
-    .duration-label {
+        .duration-label {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -2282,9 +2272,6 @@
       white-space: nowrap
     }
 
-    /* 기본 포함 교재와 추가 구매 교재의 이미지 래퍼에
-   공통으로 book-cover-fixed 클래스를 추가하세요.
-   PC·모바일 모두 가로:세로 = 3:4 비율을 유지합니다. */
 
     .book-cover-fixed {
       position: relative;
@@ -2314,11 +2301,9 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      /* 교재 표지가 잘리지 않도록 표시합니다. */
       object-position: center;
     }
 
-    /* 이미지가 없을 때도 같은 비율을 유지합니다. */
     .book-cover-fixed__placeholder {
       padding: 4px;
       color: #756d82;
@@ -2526,8 +2511,7 @@
               padding: 0 32px;
             }
 
-            /* 첫 번째 구간: 강좌 핵심 메시지 */
-            #prContent .safety-pr__hero {
+              #prContent .safety-pr__hero {
               padding: 88px 0;
               background: #f5f1ff;
               text-align: center;
@@ -2562,7 +2546,6 @@
               text-wrap: pretty;
             }
 
-            /* 두 번째 구간: 학습 내용 */
             #prContent .safety-pr__section {
               padding: 72px 0;
             }
@@ -2642,8 +2625,6 @@
               background: var(--pr-primary);
               content: "";
             }
-
-            /* 세 번째 구간: 학습 대상 */
             #prContent .safety-pr__closing {
               padding: 90px 0;
               background: #21143c;
